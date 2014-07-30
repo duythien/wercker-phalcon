@@ -1,0 +1,76 @@
+name: Phalcon dev
+version: 0.0.3
+inherits: duythien/ubuntu14.04@1.0.0
+type: main
+platform: ubuntu@14.04
+description: wercker box for php 5.5 and phalcon
+keywords:
+  - php
+  - php55
+  - mysql
+packages:
+  - php@5.5
+  - composer
+  - phalcon
+script: |
+
+  #update
+  sudo apt-get update
+
+  #install base package
+  sudo apt-get install -y curl wget unzip ack-grep git
+  sudo apt-get install software-properties-common
+  sudo apt-get install apt-file && apt-file update
+
+  sudo apt-get update
+
+  # env path
+  echo 'export PATH="/usr/local/bin:$PATH"' >> $HOME/.bash_profile
+
+  sudo add-apt-repository ppa:ondrej/php5 -y
+  sudo apt-get update -y
+
+  sudo apt-key update
+
+  #install mysql
+  sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password your_password'
+  sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password your_password'
+  sudo apt-get -y install mysql-server-5.6
+  
+  #install php 
+  sudo apt-get install --force-yes -y php5-cli php5-fpm php5-mysql php5-curl php5-gd php5-gmp php5-mcrypt php5-xdebug php5-memcached php5-imagick php5-intl php5-dev libpcre3-dev gcc make
+
+  #install phalcon
+  git clone --depth=1 git://github.com/phalcon/cphalcon.git
+  cd cphalcon/ext;
+  export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall";
+  phpize && ./configure --enable-phalcon && make -j4 && sudo make install
+
+  # Configure PHP
+  sudo sed -i 's+;date.timezone =+date.timezone = Europe/Rome +g' /etc/php5/cli/php.ini
+  sudo sed -i 's/128M/8096M/' /etc/php5/cli/php.ini
+  sudo sed -i 's/disable_functions/;disable_functions/' /etc/php5/cli/php.ini
+  sudo sed -i 'aextension=pdo_mysql.so\n' /etc/php5/cli/php.ini
+  sudo sed -i 'aextension=phalcon.so\n' /etc/php5/cli/php.ini
+
+  # install composer
+  curl -sS https://getcomposer.org/installer | php
+  sudo mv composer.phar /usr/local/bin/composer
+  sudo chmod +x /usr/local/bin/composer
+  mkdir $WERCKER_CACHE_DIR/composer || echo "Composer cache directory exists"
+  composer config --global cache-dir $WERCKER_CACHE_DIR/composer
+
+  sudo composer self-update
+
+  #PHP Unit
+  sudo wget https://phar.phpunit.de/phpunit.phar
+  sudo chmod +x phpunit.phar
+  sudo mv phpunit.phar /usr/local/bin/phpunit
+
+env:
+  WERCKER_RETHINKDB_PORT: 28015
+  WERCKER_RETHINKDB_HOST: $$HOST$$
+  WERCKER_RETHINKDB_URL: $$HOST$$:28015
+  WERCKER_RETHINKDB_VERSION: "1.13.1"
+  RETHINKDB_URL: $$HOST$$:28015
+
