@@ -1,4 +1,4 @@
-box: duythien/ubuntu14.04@1.0.0
+box: wercker/php
 build:
 steps:
     - script:
