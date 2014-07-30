@@ -1,0 +1,4 @@
+box: wercker/php
+services:
+  - duythien/rethinkdb@0.2.0
+build:
