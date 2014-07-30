@@ -50,8 +50,8 @@ script: |
   sudo sed -i 's+;date.timezone =+date.timezone = Europe/Rome +g' /etc/php5/cli/php.ini
   sudo sed -i 's/128M/8096M/' /etc/php5/cli/php.ini
   sudo sed -i 's/disable_functions/;disable_functions/' /etc/php5/cli/php.ini
-  sudo sed -i 'aextension=pdo_mysql.so\n' /etc/php5/cli/php.ini
-  sudo sed -i 'aextension=phalcon.so\n' /etc/php5/cli/php.ini
+  #sudo sed -i 'aextension=pdo_mysql.so\n' /etc/php5/cli/php.ini
+  #sudo sed -i 'aextension=phalcon.so\n' /etc/php5/cli/php.ini
 
   # install composer
   curl -sS https://getcomposer.org/installer | php
