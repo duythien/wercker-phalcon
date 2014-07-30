@@ -1,4 +1,4 @@
-name: Phalcon dev
+name: php55-mysql56
 version: 1.0.0
 inherits: duythien/ubuntu14.04@1.0.0
 type: main
@@ -66,11 +66,4 @@ script: |
   sudo wget https://phar.phpunit.de/phpunit.phar
   sudo chmod +x phpunit.phar
   sudo mv phpunit.phar /usr/local/bin/phpunit
-
-env:
-  WERCKER_RETHINKDB_PORT: 28015
-  WERCKER_RETHINKDB_HOST: $$HOST$$
-  WERCKER_RETHINKDB_URL: $$HOST$$:28015
-  WERCKER_RETHINKDB_VERSION: "1.13.1"
-  RETHINKDB_URL: $$HOST$$:28015
 
