@@ -1,8 +1,8 @@
 name: Phalcon dev
-version: 0.0.3-anphal
-inherits: wercker/ubuntu12.04-webessentials@1.0.4
+version: 1.0.0
+inherits: duythien/ubuntu14.04@1.0.0
 type: main
-platform: ubuntu@12.04
+platform: ubuntu@14.04
 description: wercker box for php 5.5 and phalcon
 keywords:
   - php
