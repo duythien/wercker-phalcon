@@ -1,6 +1,8 @@
-box: wercker/php
+box: wercker/default
 build:
-steps:
+  steps:
+    - jshint
     - script:
-        name: Add php.ini
-        code: echo 'extension=phalcon.so'
+        name: echo
+        code: echo 1
+      
