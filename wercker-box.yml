@@ -1,5 +1,5 @@
 name: phalcon
-version: 1.2.0
+version: 1.2.1
 inherits: wercker/ubuntu12.04-webessentials@0.0.3
 type: main
 platform: ubuntu@12.04
@@ -55,8 +55,9 @@ script: |
   sudo sed -i 's+;date.timezone =+date.timezone = Europe/Rome +g' /etc/php5/cli/php.ini
   sudo sed -i 's/128M/8096M/' /etc/php5/cli/php.ini
   sudo sed -i 's/disable_functions/;disable_functions/' /etc/php5/cli/php.ini
-  sudo sh -c "echo 'extension=pdo_mysql.so' >> /etc/php5/cli/php.ini"
-  sudo sh -c "echo 'extension=phalcon.so' >> /etc/php5/cli/php.ini"
+  #sudo sh -c "echo 'extension=pdo_mysql.so' >> /etc/php5/cli/php.ini"
+  sudo touch  /etc/php5/cli/conf.d/50-phalcon.ini 
+  sudo sh -c "echo 'extension=phalcon.so' >> /etc/php5/cli/conf.d/50-phalcon.ini"
   
   # install composer
   curl -sS https://getcomposer.org/installer | php
