@@ -25,7 +25,7 @@ script: |
   sudo apt-get install -y curl wget unzip ack-grep git
   sudo apt-get install software-properties-common
   sudo apt-get install apt-file && apt-file update
-  sudo apt-get-install python-software-properties
+  sudo apt-get install python-software-properties
 
   sudo apt-get update
 
