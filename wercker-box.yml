@@ -33,10 +33,7 @@ script: |
   echo 'export PATH="/usr/local/bin:$PATH"' >> $HOME/.bash_profile
 
   sudo add-apt-repository ppa:ondrej/php5 -y
-  sudo apt-add-repository ppa:phalcon/stable -y
-
   sudo apt-get update -y
-
   sudo apt-key update
 
   #install mysql
@@ -45,12 +42,15 @@ script: |
   sudo apt-get -y install mysql-server  php5-mysql
   
   #install php 
-  sudo apt-get install --force-yes -y php-apc php5-xcache php5 php5-cli php5-fpm php5-mysql php5-curl php5-gd php5-gmp php5-mcrypt php5-xdebug php5-memcached php5-imagick php5-intl php5-dev libpcre3-dev gcc make
+  sudo apt-get install --force-yes -y  php5 php5-cli php5-fpm php5-mysql php5-curl php5-gd php5-gmp php5-mcrypt php5-xdebug php5-memcached php5-imagick php5-intl php5-dev libpcre3-dev gcc make
 
   #install phalcon
 
-  sudo apt-get -y install php5-phalcon
-
+  git clone --depth=1 git://github.com/phalcon/cphalcon.git
+  cd cphalcon/ext;
+  export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall";
+  phpize && ./configure --enable-phalcon && make -j4 && sudo make install
+  
   # Configure PHP
   sudo sed -i 's+;date.timezone =+date.timezone = Europe/Rome +g' /etc/php5/cli/php.ini
   sudo sed -i 's/128M/8096M/' /etc/php5/cli/php.ini
