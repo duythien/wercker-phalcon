@@ -1,5 +1,5 @@
 name: phalcon
-version: 1.1.1
+version: 1.2.0
 inherits: wercker/ubuntu12.04-webessentials@0.0.3
 type: main
 platform: ubuntu@12.04
@@ -47,16 +47,19 @@ script: |
   #install phalcon
 
   git clone --depth=1 git://github.com/phalcon/cphalcon.git
-  cd cphalcon/ext;
-  export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall";
-  phpize && ./configure --enable-phalcon && make -j4 && sudo make install
+  #cd cphalcon/ext;
+  #export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall";
+  #phpize && ./configure --enable-phalcon && make -j4 && sudo make install
+  cd cphalcon/build
+  sudo ./install
   
   # Configure PHP
   sudo sed -i 's+;date.timezone =+date.timezone = Europe/Rome +g' /etc/php5/cli/php.ini
   sudo sed -i 's/128M/8096M/' /etc/php5/cli/php.ini
   sudo sed -i 's/disable_functions/;disable_functions/' /etc/php5/cli/php.ini
-  sudo sed -i 'aextension=pdo_mysql.so\n' /etc/php5/cli/php.ini
-  sudo sed -i 'aextension=phalcon.so\n' /etc/php5/cli/php.ini
+  sudo -i
+  echo 'extension=pdo_mysql.so' >> /etc/php5/cli/php.ini
+  echo 'extension=phalcon.so' >> /etc/php5/cli/php.ini
   
   # install composer
   curl -sS https://getcomposer.org/installer | php
