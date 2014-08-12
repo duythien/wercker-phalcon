@@ -27,8 +27,6 @@ script: |
   sudo apt-get install apt-file && apt-file update
   sudo apt-get install python-software-properties
 
-  sudo apt-get update
-
   # env path
   echo 'export PATH="/usr/local/bin:$PATH"' >> $HOME/.bash_profile
 
@@ -57,9 +55,8 @@ script: |
   sudo sed -i 's+;date.timezone =+date.timezone = Europe/Rome +g' /etc/php5/cli/php.ini
   sudo sed -i 's/128M/8096M/' /etc/php5/cli/php.ini
   sudo sed -i 's/disable_functions/;disable_functions/' /etc/php5/cli/php.ini
-  sudo -i
-  echo 'extension=pdo_mysql.so' >> /etc/php5/cli/php.ini
-  echo 'extension=phalcon.so' >> /etc/php5/cli/php.ini
+  sudo sh -c "echo 'extension=pdo_mysql.so' >> /etc/php5/cli/php.ini"
+  sudo sh -c "echo 'extension=phalcon.so' >> /etc/php5/cli/php.ini"
   
   # install composer
   curl -sS https://getcomposer.org/installer | php
