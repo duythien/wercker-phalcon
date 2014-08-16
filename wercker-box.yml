@@ -1,5 +1,5 @@
 name: phalcon
-version: 1.2.1
+version: 1.2.2
 inherits: wercker/ubuntu12.04-webessentials@0.0.3
 type: main
 platform: ubuntu@12.04
@@ -11,11 +11,19 @@ keywords:
   - mysql
   - phalcon
   - phpunit
+  - codeception
+  - ruby
+  - sass
+  - compass
 packages:
   - php@5.5
   - composer
   - phalcon
   - phpunit
+  - codeception
+  - ruby
+  - sass
+  - compass
 script: |
 
   #update
@@ -38,6 +46,14 @@ script: |
   sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password your_password'
   sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password your_password'
   sudo apt-get -y install mysql-server  php5-mysql
+  
+  #install ruby
+  sudo apt-get install ruby-full -y
+  sudo apt-get install rubygems -y
+  
+  #install sass and compass
+  sudo gem install sass -y
+  sudo gem install compass -y
   
   #install php 
   sudo apt-get install --force-yes -y  php5 php5-cli php5-fpm php5-mysql php5-curl php5-gd php5-gmp php5-mcrypt php5-xdebug php5-memcached php5-imagick php5-intl php5-dev libpcre3-dev gcc make
@@ -72,4 +88,10 @@ script: |
   sudo wget https://phar.phpunit.de/phpunit.phar
   sudo chmod +x phpunit.phar
   sudo mv phpunit.phar /usr/local/bin/phpunit
+  #PHP Codeception
+  sudo wget http://codeception.com/codecept.phar
+  sudo chmod +x codecept.phar
+  sudo mv codecept.phar /usr/local/bib/codecept
+  
+  
 
