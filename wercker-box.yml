@@ -91,7 +91,7 @@ script: |
   #PHP Codeception
   sudo wget http://codeception.com/codecept.phar
   sudo chmod +x codecept.phar
-  sudo mv codecept.phar /usr/local/bib/codecept
+  sudo mv codecept.phar /usr/local/bin/codecept
   
   
 
