@@ -48,9 +48,8 @@ script: |
   sudo apt-get -y install mysql-server  php5-mysql
   
   #install ruby
-  sudo apt-get install ruby-full -y
-  sudo apt-get install rubygems -y
-  
+  sudo \curl -L https://get.rvm.io | bash -s stable --ruby
+  sudo gem update --system
   #install sass and compass
   sudo gem install sass -y
   sudo gem install compass -y
@@ -82,7 +81,7 @@ script: |
   mkdir $WERCKER_CACHE_DIR/composer || echo "Composer cache directory exists"
   composer config --global cache-dir $WERCKER_CACHE_DIR/composer
 
-  sudo composer install
+  sudo composer self-update
 
   #PHP Unit
   sudo wget https://phar.phpunit.de/phpunit.phar
