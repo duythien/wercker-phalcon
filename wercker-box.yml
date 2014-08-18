@@ -49,7 +49,7 @@ script: |
   
   #install ruby
   sudo \curl -L https://get.rvm.io | bash -s stable --ruby
-  sudo source /home/ubuntu/.rvm/scripts/rvm`
+  sudo source /home/ubuntu/.rvm/scripts/rvm
   gem --version
   ruby --version
   #install sass and compass
