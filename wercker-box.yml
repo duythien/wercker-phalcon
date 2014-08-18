@@ -82,7 +82,7 @@ script: |
   mkdir $WERCKER_CACHE_DIR/composer || echo "Composer cache directory exists"
   composer config --global cache-dir $WERCKER_CACHE_DIR/composer
 
-  sudo composer self-update
+  sudo composer install
 
   #PHP Unit
   sudo wget https://phar.phpunit.de/phpunit.phar
