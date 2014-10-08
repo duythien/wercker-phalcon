@@ -54,6 +54,7 @@ script: |
     #install ruby
     sudo \curl -L https://get.rvm.io | bash -s stable --ruby
     #sudo source /home/ubuntu/.rvm/scripts/rvm
+    source $HOME/.bash_profile
     gem --version
     ruby --version
     #install sass and compass
@@ -88,12 +89,13 @@ script: |
     # Validate phpenv
     phpenv --version
     # Build PHP versions
+    php-ini='$HOME/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
     cp patch-intl-5.3.sh /usr/local/share/php-build/before-install.d/
     chmod +x /usr/local/share/php-build/before-install.d/patch-intl-5.3.sh
     php-build -i development --pear 5.3.28 $HOME/.phpenv/versions/5.3 --verbose
     rm /usr/local/share/php-build/before-install.d/patch-intl-5.3.sh
-    sed -i 's/128M/8096M/' /home/ubuntu/.phpenv/versions/5.3/etc/php.ini
-    
+    sed -i 's/128M/8096M/' $php-ini
+
     # Setup environment
     phpenv rehash
     phpenv global 5.3
@@ -122,21 +124,20 @@ script: |
     sudo mv mageekguy.atoum.phar $prefix/bin/atoum
     sudo chmod +x $prefix/bin/atoum
     php-build -i development --pear 5.4.28 $HOME/.phpenv/versions/5.4 --verbose
-    sed -i 's/128M/8096M/' /home/ubuntu/.phpenv/versions/5.4/etc/php.ini
-
+    sed -i 's/128M/8096M/' $php-ini
 
     #install phalcon
     git clone --depth=1 git://github.com/phalcon/cphalcon.git
-    #cd cphalcon/ext;
-    #export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall";
-    #phpize && ./configure --enable-phalcon && make -j4 && sudo make install
-    cd cphalcon/build
-    sudo ./install
+    cd cphalcon/ext;
+    export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall";
+    phpize && ./configure --enable-phalcon && make -j4 && sudo make install
+    #cd cphalcon/build
+    #sudo ./install
   
     # Configure PHP
-    sudo sed -i 's+;date.timezone =+date.timezone = Europe/Rome +g' /etc/php5/cli/php.ini
-    sudo sed -i 's/128M/8096M/' /etc/php5/cli/php.ini
-    sudo sed -i 's/disable_functions/;disable_functions/' /etc/php5/cli/php.ini
+    sudo sed -i 's+;date.timezone =+date.timezone = Europe/Rome +g' $HOME/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+
+    sudo sed -i 's/disable_functions/;disable_functions/' $php-ini
     #sudo sh -c "echo 'extension=pdo_mysql.so' >> /etc/php5/cli/php.ini"
     sudo touch  /etc/php5/cli/conf.d/50-phalcon.ini 
     sudo sh -c "echo 'extension=phalcon.so' >> /etc/php5/cli/conf.d/50-phalcon.ini"
@@ -146,3 +147,7 @@ script: |
     sudo chmod +x codecept.phar
     sudo mv codecept.phar /usr/local/bin/codecept
   
+  
+  
+  
+
