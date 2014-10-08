@@ -33,34 +33,14 @@ script: |
     sudo apt-key update
 
 
-    #install base package
-    sudo apt-get install -y curl wget unzip ack-grep git
-    sudo apt-get install software-properties-common
-    sudo apt-get install apt-file && apt-file update
-    sudo apt-get install python-software-properties
-
     # Needed to build PHP with php-build
+    sudo apt-get install -y curl wget unzip ack-grep git
     sudo apt-get build-dep php5-cli
     sudo apt-get install libreadline-dev
     sudo apt-get install re2c
     sudo apt-get install flex
     sudo apt-get install bison
-
-    #install mysql
-    sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password your_password'
-    sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password your_password'
-    sudo apt-get -y install mysql-server  php5-mysql
-  
-    #install ruby
-    sudo \curl -L https://get.rvm.io | bash -s stable --ruby
-    #sudo source /home/ubuntu/.rvm/scripts/rvm
-    source $HOME/.bash_profile
-    gem --version
-    ruby --version
-    #install sass and compass
-    sudo gem install sass -y
-    sudo gem install compass -y
-  
+    
     #Install php-build
     git clone https://github.com/CHH/php-build.git
     sudo ./php-build/install.sh
@@ -89,7 +69,7 @@ script: |
     # Validate phpenv
     phpenv --version
     # Build PHP versions
-    php-ini='$HOME/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
+    php-ini=$HOME/.phpenv/versions/$(phpenv version-name)/etc/php.ini
     echo $php-ini
     cp patch-intl-5.3.sh /usr/local/share/php-build/before-install.d/
     chmod +x /usr/local/share/php-build/before-install.d/patch-intl-5.3.sh
