@@ -90,6 +90,7 @@ script: |
     phpenv --version
     # Build PHP versions
     php-ini='$HOME/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
+    echo $php-ini
     cp patch-intl-5.3.sh /usr/local/share/php-build/before-install.d/
     chmod +x /usr/local/share/php-build/before-install.d/patch-intl-5.3.sh
     php-build -i development --pear 5.3.28 $HOME/.phpenv/versions/5.3 --verbose
