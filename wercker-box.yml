@@ -69,7 +69,9 @@ script: |
     # Validate phpenv
     phpenv --version
     # Build PHP versions
-    php-ini=$HOME/.phpenv/versions/$(phpenv version)/etc/php.ini
+    phpenv versions
+    phpenv --help
+    php-ini=$HOME/.phpenv/versions/$(phpenv versions)/etc/php.ini
     echo $php-ini
     cp patch-intl-5.3.sh /usr/local/share/php-build/before-install.d/
     chmod +x /usr/local/share/php-build/before-install.d/patch-intl-5.3.sh
