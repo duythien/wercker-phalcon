@@ -69,15 +69,12 @@ script: |
     # Validate phpenv
     phpenv --version
     # Build PHP versions
-    phpenv --versions
-    phpenv --help
-    php-ini=$HOME/.phpenv/versions/$(phpenv --versions)/etc/php.ini
-    echo $php-ini
+    
     cp patch-intl-5.3.sh /usr/local/share/php-build/before-install.d/
     chmod +x /usr/local/share/php-build/before-install.d/patch-intl-5.3.sh
     php-build -i development --pear 5.3.28 $HOME/.phpenv/versions/5.3 --verbose
     rm /usr/local/share/php-build/before-install.d/patch-intl-5.3.sh
-    sed -i 's/128M/8096M/' $php-ini
+    sed -i 's/128M/8096M/' /home/ubuntu/.phpenv/versions/5.3/etc/php.ini
 
     # Setup environment
     phpenv rehash
@@ -106,9 +103,7 @@ script: |
     chmod +x mageekguy.atoum.phar
     sudo mv mageekguy.atoum.phar $prefix/bin/atoum
     sudo chmod +x $prefix/bin/atoum
-    php-build -i development --pear 5.4.28 $HOME/.phpenv/versions/5.4 --verbose
-    sed -i 's/128M/8096M/' $php-ini
-
+    
     #install phalcon
     git clone --depth=1 git://github.com/phalcon/cphalcon.git
     cd cphalcon/ext;
@@ -129,8 +124,3 @@ script: |
     sudo wget http://codeception.com/codecept.phar
     sudo chmod +x codecept.phar
     sudo mv codecept.phar /usr/local/bin/codecept
-  
-  
-  
-  
-
