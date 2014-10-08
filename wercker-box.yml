@@ -25,74 +25,124 @@ packages:
   - sass
   - compass
 script: |
+    # Add eports to profile, rc didn't work
+    echo 'export PATH="/usr/local/bin:$PATH"' >> $HOME/.bash_profile 
 
-  #update
-  sudo apt-get update
+    sudo add-apt-repository ppa:ondrej/php5 -y
+    sudo apt-get update -y
+    sudo apt-key update
 
-  #install base package
-  sudo apt-get install -y curl wget unzip ack-grep git
-  sudo apt-get install software-properties-common
-  sudo apt-get install apt-file && apt-file update
-  sudo apt-get install python-software-properties
 
-  # env path
-  echo 'export PATH="/usr/local/bin:$PATH"' >> $HOME/.bash_profile
+    #install base package
+    sudo apt-get install -y curl wget unzip ack-grep git
+    sudo apt-get install software-properties-common
+    sudo apt-get install apt-file && apt-file update
+    sudo apt-get install python-software-properties
 
-  sudo add-apt-repository ppa:ondrej/php5 -y
-  sudo apt-get update -y
-  sudo apt-key update
+    # Needed to build PHP with php-build
+    sudo apt-get build-dep php5-cli
+    sudo apt-get install libreadline-dev
+    sudo apt-get install re2c
+    sudo apt-get install flex
+    sudo apt-get install bison
 
-  #install mysql
-  sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password your_password'
-  sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password your_password'
-  sudo apt-get -y install mysql-server  php5-mysql
+    #install mysql
+    sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password your_password'
+    sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password your_password'
+    sudo apt-get -y install mysql-server  php5-mysql
   
-  #install ruby
-  sudo \curl -L https://get.rvm.io | bash -s stable --ruby
-  #sudo source /home/ubuntu/.rvm/scripts/rvm
-  gem --version
-  ruby --version
-  #install sass and compass
-  sudo gem install sass -y
-  sudo gem install compass -y
+    #install ruby
+    sudo \curl -L https://get.rvm.io | bash -s stable --ruby
+    #sudo source /home/ubuntu/.rvm/scripts/rvm
+    gem --version
+    ruby --version
+    #install sass and compass
+    sudo gem install sass -y
+    sudo gem install compass -y
   
-  #install php 
-  sudo apt-get install --force-yes -y  php5 php5-cli php5-fpm php5-mysql php5-curl php5-gd php5-gmp php5-mcrypt php5-xdebug php5-memcached php5-imagick php5-intl php5-dev libpcre3-dev gcc make
+    #Install php-build
+    git clone https://github.com/CHH/php-build.git
+    sudo ./php-build/install.sh
+    rm -rf ./php-build
+    sudo chown -R ubuntu $HOME
+    sudo chown -R ubuntu /usr/local/share/php-build
+    export PHP_BUILD_CONFIGURE_OPTS="--with-bz2 --enable-intl --enable-calendar"
+    export PHP_BUILD_VERSIONS_DIR="$HOME/.phpenv/versions"
 
-  #install phalcon
+    # Validate php-build
+    php-build --version
 
-  git clone --depth=1 git://github.com/phalcon/cphalcon.git
-  #cd cphalcon/ext;
-  #export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall";
-  #phpize && ./configure --enable-phalcon && make -j4 && sudo make install
-  cd cphalcon/build
-  sudo ./install
+
+    # Intall php-env
+    git clone https://github.com/CHH/phpenv.git
+    sudo ./phpenv/bin/phpenv-install.sh
+    echo 'export PATH="/home/ubuntu/.phpenv/shims:/home/ubuntu/.phpenv/bin:$PATH"' >> $HOME/.bash_profile
+    echo 'eval "$(phpenv init -)"' >> $HOME/.bash_profile
+    # Install extensions
+    sudo cp ./phpenv/extensions/rbenv-config-add /home/ubuntu/.phpenv/libexec
+    sudo cp ./phpenv/extensions/rbenv-config-rm /home/ubuntu/.phpenv/libexec
+    rm -rf ./phpenv
+    sudo chown -R ubuntu $HOME
+    source $HOME/.bash_profile
+
+    # Validate phpenv
+    phpenv --version
+    # Build PHP versions
+    cp patch-intl-5.3.sh /usr/local/share/php-build/before-install.d/
+    chmod +x /usr/local/share/php-build/before-install.d/patch-intl-5.3.sh
+    php-build -i development --pear 5.3.28 $HOME/.phpenv/versions/5.3 --verbose
+    rm /usr/local/share/php-build/before-install.d/patch-intl-5.3.sh
+    sed -i 's/128M/8096M/' /home/ubuntu/.phpenv/versions/5.3/etc/php.ini
+    
+    # Setup environment
+    phpenv rehash
+    phpenv global 5.3
+    phpenv rehash
+    prefix=$(phpenv prefix)
+    # list php version environment
+    ls $prefix
+    ls $prefix/pear
+    # echo the current path
+    echo $PATH
+    # Download composer
+    curl -sS https://getcomposer.org/installer | php
+    sudo chmod +x ./composer.phar
+    ./composer.phar selfupdate
+    # Install composer
+    sudo cp composer.phar $prefix/bin/composer
+    sudo chmod +x $prefix/bin/composer
+    # Install DBunit and DBunit
+    pear config-set auto_discover 1
+    pear channel-discover pear.phpunit.de
+    pear install pear.phpunit.de/PHPUnit
+    pear install pear.phpunit.de/DbUnit
+    # Install atoum
+    wget http://downloads.atoum.org/nightly/mageekguy.atoum.phar
+    chmod +x mageekguy.atoum.phar
+    sudo mv mageekguy.atoum.phar $prefix/bin/atoum
+    sudo chmod +x $prefix/bin/atoum
+    php-build -i development --pear 5.4.28 $HOME/.phpenv/versions/5.4 --verbose
+    sed -i 's/128M/8096M/' /home/ubuntu/.phpenv/versions/5.4/etc/php.ini
+
+
+    #install phalcon
+    git clone --depth=1 git://github.com/phalcon/cphalcon.git
+    #cd cphalcon/ext;
+    #export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall";
+    #phpize && ./configure --enable-phalcon && make -j4 && sudo make install
+    cd cphalcon/build
+    sudo ./install
   
-  # Configure PHP
-  sudo sed -i 's+;date.timezone =+date.timezone = Europe/Rome +g' /etc/php5/cli/php.ini
-  sudo sed -i 's/128M/8096M/' /etc/php5/cli/php.ini
-  sudo sed -i 's/disable_functions/;disable_functions/' /etc/php5/cli/php.ini
-  #sudo sh -c "echo 'extension=pdo_mysql.so' >> /etc/php5/cli/php.ini"
-  sudo touch  /etc/php5/cli/conf.d/50-phalcon.ini 
-  sudo sh -c "echo 'extension=phalcon.so' >> /etc/php5/cli/conf.d/50-phalcon.ini"
+    # Configure PHP
+    sudo sed -i 's+;date.timezone =+date.timezone = Europe/Rome +g' /etc/php5/cli/php.ini
+    sudo sed -i 's/128M/8096M/' /etc/php5/cli/php.ini
+    sudo sed -i 's/disable_functions/;disable_functions/' /etc/php5/cli/php.ini
+    #sudo sh -c "echo 'extension=pdo_mysql.so' >> /etc/php5/cli/php.ini"
+    sudo touch  /etc/php5/cli/conf.d/50-phalcon.ini 
+    sudo sh -c "echo 'extension=phalcon.so' >> /etc/php5/cli/conf.d/50-phalcon.ini"
   
-  # install composer
-  curl -sS https://getcomposer.org/installer | php
-  sudo mv composer.phar /usr/local/bin/composer
-  sudo chmod +x /usr/local/bin/composer
-  mkdir $WERCKER_CACHE_DIR/composer || echo "Composer cache directory exists"
-  composer config --global cache-dir $WERCKER_CACHE_DIR/composer
-
-  sudo composer self-update
-
-  #PHP Unit
-  sudo wget https://phar.phpunit.de/phpunit.phar
-  sudo chmod +x phpunit.phar
-  sudo mv phpunit.phar /usr/local/bin/phpunit
-  #PHP Codeception
-  sudo wget http://codeception.com/codecept.phar
-  sudo chmod +x codecept.phar
-  sudo mv codecept.phar /usr/local/bin/codecept
+    #PHP Codeception
+    sudo wget http://codeception.com/codecept.phar
+    sudo chmod +x codecept.phar
+    sudo mv codecept.phar /usr/local/bin/codecept
   
-  
-
