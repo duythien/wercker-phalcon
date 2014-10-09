@@ -74,8 +74,8 @@ script: |
     chmod +x /usr/local/share/php-build/before-install.d/patch-intl-5.3.sh
     php-build -i development --pear 5.3.28 $HOME/.phpenv/versions/5.3 --verbose
     rm /usr/local/share/php-build/before-install.d/patch-intl-5.3.sh
-    php-ini=/home/ubuntu/.phpenv/versions/5.3/etc/php.ini
-    sed -i 's/128M/8096M/' $php-ini
+    export PHPINI=/home/ubuntu/.phpenv/versions/5.3/etc/php.ini
+    sed -i 's/128M/8096M/' $PHPINI
 
     # Setup environment
     phpenv rehash
@@ -114,9 +114,9 @@ script: |
     #sudo ./install
   
     # Configure PHP
-    sudo sed -i 's+;date.timezone =+date.timezone = Europe/Rome +g'  $php-ini
+    sudo sed -i 's+;date.timezone =+date.timezone = Europe/Rome +g'  $PHPINI
 
-    sudo sed -i 's/disable_functions/;disable_functions/' $php-ini
+    sudo sed -i 's/disable_functions/;disable_functions/' $PHPINI
     ls -la /home/ubuntu/.phpenv/versions/5.3/
     ls -la /home/ubuntu/.phpenv/versions/5.3/etc
     ls -la /etc/php5
