@@ -69,11 +69,12 @@ script: |
     # Validate phpenv
     phpenv --version
     # Build PHP versions
-    php-ini='/home/ubuntu/.phpenv/versions/5.3/etc/php.ini'
+    
     cp patch-intl-5.3.sh /usr/local/share/php-build/before-install.d/
     chmod +x /usr/local/share/php-build/before-install.d/patch-intl-5.3.sh
     php-build -i development --pear 5.3.28 $HOME/.phpenv/versions/5.3 --verbose
     rm /usr/local/share/php-build/before-install.d/patch-intl-5.3.sh
+    php-ini='/home/ubuntu/.phpenv/versions/5.3/etc/php.ini'
     sed -i 's/128M/8096M/' $php-ini
 
     # Setup environment
