@@ -70,7 +70,7 @@ script: |
     phpenv --version
     # Build PHP versions
     ###################
-    ## PHP 5.5 
+    ## PHP 5.3
     ###################
     cp patch-intl-5.3.sh /usr/local/share/php-build/before-install.d/
     chmod +x /usr/local/share/php-build/before-install.d/patch-intl-5.3.sh
@@ -134,7 +134,7 @@ script: |
     ###################
 
     php-build -i development --pear 5.4.28 $HOME/.phpenv/versions/5.4 --verbose
-    export $PHPINI=/home/ubuntu/.phpenv/versions/5.4/etc/php.ini
+    export PHPINI=/home/ubuntu/.phpenv/versions/5.4/etc/php.ini
     sed -i 's/128M/8096M/' $PHPINI
 
     # Setup environment
@@ -192,7 +192,7 @@ script: |
     ###################
 
     php-build -i development --pear 5.5.11 $HOME/.phpenv/versions/5.5 --verbose
-    export $PHPINI=/home/ubuntu/.phpenv/versions/5.5/etc/php.ini
+    export PHPINI=/home/ubuntu/.phpenv/versions/5.5/etc/php.ini
     sed -i 's/128M/8096M/' $PHPINI
 
     # Setup environment
