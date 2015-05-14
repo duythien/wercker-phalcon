@@ -155,10 +155,10 @@ script: |
     sudo cp composer.phar $prefix/bin/composer
     sudo chmod +x $prefix/bin/composer
     # Install DBunit and DBunit
-    pear config-set auto_discover 1
-    pear channel-discover pear.phpunit.de
-    pear install pear.phpunit.de/PHPUnit
-    pear install pear.phpunit.de/DbUnit
+    #pear config-set auto_discover 1
+    # pear channel-discover pear.phpunit.de
+    #pear install pear.phpunit.de/PHPUnit
+    #pear install pear.phpunit.de/DbUnit
     # Install atoum
     wget http://downloads.atoum.org/nightly/mageekguy.atoum.phar
     chmod +x mageekguy.atoum.phar
