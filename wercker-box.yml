@@ -108,7 +108,7 @@ script: |
     sudo chmod +x $prefix/bin/atoum
     
     #install phalcon
-    git clone --depth=1 git://github.com/phalcon/cphalcon.git
+    git clone --depth=1 https://github.com/phalcon/cphalcon.git
     cd cphalcon/ext;
     export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall";
     phpize && ./configure --enable-phalcon && make -j4 && sudo make install
@@ -165,7 +165,7 @@ script: |
     sudo chmod +x $prefix/bin/atoum
     
     #install phalcon
-    git clone --depth=1 git://github.com/phalcon/cphalcon.git
+    git clone --depth=1 https://github.com/phalcon/cphalcon.git
     cd cphalcon/ext;
     export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall";
     phpize && ./configure --enable-phalcon && make -j4 && sudo make install
@@ -222,7 +222,7 @@ script: |
     sudo chmod +x $prefix/bin/atoum
     
     #install phalcon
-    git clone --depth=1 git://github.com/phalcon/cphalcon.git
+    git clone --depth=1 https://github.com/phalcon/cphalcon.git
     cd cphalcon/ext;
     export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall";
     phpize && ./configure --enable-phalcon && make -j4 && sudo make install
